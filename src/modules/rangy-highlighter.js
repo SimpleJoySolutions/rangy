@@ -237,7 +237,11 @@ rangy.createModule("Highlighter", ["ClassApplier"], function(api, module) {
         },
 
         getText: function() {
-            return this.getRange().toString();
+            if(typeof this.getRange().text === "function") {
+              return this.getRange().text();
+            } else {
+              return this.getRange().toString();
+            }
         },
 
         containsElement: function(el) {
