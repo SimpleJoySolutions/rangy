@@ -454,7 +454,7 @@ rangy.createModule("TextRange", ["WrappedSelection"], function(api, module) {
         return type == 7 /* PROCESSING_INSTRUCTION */ ||
             type == 8 /* COMMENT */ ||
             isHidden(node) ||
-            /^(script|style)$/i.test(node.nodeName) ||
+            /^(script|style|svg)$/i.test(node.nodeName) ||
             isVisibilityHiddenTextNode(node) ||
             isCollapsedWhitespaceNode(node);
     }
@@ -1528,6 +1528,13 @@ rangy.createModule("TextRange", ["WrappedSelection"], function(api, module) {
             currentChar = pos.character;
             if (!isRegex && !findOptions.caseSensitive) {
                 currentChar = currentChar.toLowerCase();
+            }
+
+            // If there is a non-breaking space in the innerText, then replace with empty space " " so that it
+            // matches with the searchTerm. Based on the documentation, search should be performed on
+            // the visible text of the document
+            if (currentChar == "\u00a0") {
+              currentChar = " ";
             }
 
             if (backward) {
